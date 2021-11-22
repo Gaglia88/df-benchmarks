@@ -1,0 +1,3 @@
+FROM df-benchmarks
+
+RUN pip3 install pandas

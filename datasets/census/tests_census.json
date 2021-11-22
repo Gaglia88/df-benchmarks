@@ -1,0 +1,10 @@
+[
+	{
+		"method": "fill_nan",
+		"input": -1
+	},
+	{
+		"method": "sort",
+		"input": ["Attr1", "Attr2"]
+	}
+]

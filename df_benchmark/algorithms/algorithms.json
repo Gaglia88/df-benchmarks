@@ -1,0 +1,8 @@
+[
+	{
+		"name": "pandas",
+		"module": "df_benchmark.algorithms.pandas",
+		"constructor": "pandasBench",
+		"constructor_args": []
+	}
+]

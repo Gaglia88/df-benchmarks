@@ -1,0 +1,8 @@
+[
+	{
+        "name": "census",
+        "path": "datasets/census/census.csv",
+		"tests": "datasets/census/tests_census.json",
+        "type": "csv"
+    }
+]
