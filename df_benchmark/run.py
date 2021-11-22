@@ -87,28 +87,29 @@ def run_algo():
     algo = create_algo(algorithms[args.algorithm])
     
     #Create log file
-    log = get_logger(dataset, args.algorithm)
+    log = get_logger(args.dataset, args.algorithm)
     
     #Load the tests to perform on the dataset
     tests = load_tests(datasets[args.dataset]['tests'])
     
-    #Load the data
-    print("Load data")
-    mstart = algo.get_memory_usage()
-    tstart = time.time()
-    algo.load_dataset(datasets[args.dataset]['path'], datasets[args.dataset]['type'], sep=',')
-    t = time.time()-tstart
-    m = algo.get_memory_usage()-mstart
-    log.write("load_data,"+str(t)+","+str(m)+"\n")
+    
     
     #Execute each test on the dataset
     for test in tests:
         print("Running "+test['method'])
-        mstart = algo.get_memory_usage()
-        tstart = time.time()
-        getattr(algo, test['method'])(test['input'])
-        t = time.time()-tstart
-        m = algo.get_memory_usage()-mstart
+        if test['method'] == 'load_dataset':
+            #Load the data
+            mstart = algo.get_memory_usage()
+            tstart = time.time()
+            algo.load_dataset(datasets[args.dataset]['path'], datasets[args.dataset]['type'], **test['input'])
+            t = time.time()-tstart
+            m = algo.get_memory_usage()-mstart
+        else:
+            mstart = algo.get_memory_usage()
+            tstart = time.time()
+            getattr(algo, test['method'])(test['input'])
+            t = time.time()-tstart
+            m = algo.get_memory_usage()-mstart
         log.write(test['method']+","+str(t)+","+str(m)+"\n")
         
     
