@@ -6,7 +6,7 @@ import json
 import psutil
 import colors
 import threading
-import argparse
+import traceback
 
 def create_algo(definition):
     """
@@ -59,38 +59,25 @@ def get_logger(dataset, algorithm):
     log.write("operation,time,mem\n")
     return log
 
-def run_algo():
+def run_algo_locally(algorithm, dataset):
     """
         Runs an algorithm on local machine
     """
+    
     #Load available algorithms
     algorithms = load_algorithms()
     
     #Load available datasets
     datasets = load_datasets()
     
-    #Set up argument parset
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument(
-        '--algorithm',
-        choices=algorithms.keys(),
-        help='Algorithm name',
-        required=True)
-    parser.add_argument(
-        '--dataset',
-        choices=datasets.keys(),
-        help='Dataset name',
-        required=True)
-    args = parser.parse_args()
-    
     #Load the current algorithm
-    algo = create_algo(algorithms[args.algorithm])
+    algo = create_algo(algorithms[algorithm])
     
     #Create log file
-    log = get_logger(args.dataset, args.algorithm)
+    log = get_logger(dataset, algorithm)
     
     #Load the tests to perform on the dataset
-    tests = load_tests(datasets[args.dataset]['tests'])
+    tests = load_tests(datasets[dataset]['tests'])
     
     
     
@@ -101,7 +88,7 @@ def run_algo():
             #Load the data
             mstart = algo.get_memory_usage()
             tstart = time.time()
-            algo.load_dataset(datasets[args.dataset]['path'], datasets[args.dataset]['type'], **test['input'])
+            algo.load_dataset(datasets[dataset]['path'], datasets[dataset]['type'], **test['input'])
             t = time.time()-tstart
             m = algo.get_memory_usage()-mstart
         else:
@@ -116,22 +103,29 @@ def run_algo():
     print("DONE")
     algo.done()
     log.close()
+    
     pass
     
-def run_algo_docker():
+def run_algo_docker(algorithm, dataset, cpu_limit=None, mem_limit=None):
     """
         Runs an algorithm inside a docker container
     """
     
-    cmd = ""
-    docker_tag = "df-benchmarks-pandas"
+    cmd = ['--dataset', dataset,
+           '--algorithm', algorithm,
+           '--locally'
+          ]
+          
+    docker_tag = "df-benchmarks-"+algorithm
     
-    mem_limit = None
-    cpu_limit = "1"
-    
-    client = docker.from_env()
     if mem_limit is None:
         mem_limit = psutil.virtual_memory().available
+    
+    if cpu_limit is None:
+        cpu_limit = "1"
+    
+    client = docker.from_env()
+    
 
     container = client.containers.run(
         docker_tag,
@@ -144,12 +138,9 @@ def run_algo_docker():
             os.path.abspath('results'):
                 {'bind': '/home/app/results', 'mode': 'rw'},
         },
-        cpuset_cpus=cpu_limit,
+        cpuset_cpus=str(cpu_limit),
         mem_limit=mem_limit,
         detach=True)
-        
-    print("CREATED CONTAINER")
-    
     
     def stream_logs():
         for line in container.logs(stream=True):
@@ -160,18 +151,19 @@ def run_algo_docker():
     
     
     try:
-        exit_code = container.wait(timeout=2000)
+        exit_code = container.wait(timeout=20000)
 
         # Exit if exit code
         try:
-            exit_code = exit_code.StatusCode
+            exit_code = exit_code['StatusCode']
         except AttributeError:
             pass
+
         if exit_code not in [0, None]:
             print(colors.color(container.logs().decode(), fg='red'))
-            print('Child process for container %s raised exception %d' % (container.short_id, exit_code))
+            print("Child process for container", container.short_id,  "raised exception", exit_code)
     except:
-        print('Container.wait for container %s failed with exception' % container.short_id)
+        print("Container.wait for container ", container.short_id, " failed with exception")
         traceback.print_exc()
     finally:
         container.remove(force=True)
