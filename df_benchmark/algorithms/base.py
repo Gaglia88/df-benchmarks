@@ -23,7 +23,22 @@ class BaseDfBench(object):
 
     def delete_columns(self, columns):
         """
-        Delete the specified columns
+        Delete the provided columns
+        Columns is a list of column names
+        """
+        pass
+
+    def rename_columns(self, columns):
+        """
+        Rename the provided columns using the provided names
+        Columns is a dictionary: {"column_name": "new_name"}
+        """
+        pass
+
+    def merge_columns(self, columns, separator, name):
+        """
+        Create a new column with the provided name combining the two provided columns using the provided separator
+        Columns is a list of two column names; separator and name are strings
         """
         pass
 
@@ -36,5 +51,13 @@ class BaseDfBench(object):
     def sort(self, columns, ascending=True):
         """
         Sort the dataframe by the provided columns
+        Columns is a list of column names
+        """
+        pass
+
+    def one_hot_encoding(self, columns):
+        """
+        Performs one-hot-encoding of the provided columns
+        Columns is a list of column names
         """
         pass
