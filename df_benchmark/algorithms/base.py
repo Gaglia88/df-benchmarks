@@ -21,6 +21,25 @@ class BaseDfBench(object):
         """
         pass
 
+    def sort(self, columns, ascending=True):
+        """
+        Sort the dataframe by the provided columns
+        Columns is a list of column names
+        """
+        pass
+
+    def get_columns(self):
+        """
+        Return a list containing the names of the columns in the dataframe
+        """
+        pass
+
+    def is_unique(self, column):
+        """
+        Check the uniqueness of all values contained in the provided column_name
+        """
+        pass
+
     def delete_columns(self, columns):
         """
         Delete the provided columns
@@ -48,16 +67,9 @@ class BaseDfBench(object):
         """
         pass
 
-    def sort(self, columns, ascending=True):
-        """
-        Sort the dataframe by the provided columns
-        Columns is a list of column names
-        """
-        pass
-
     def one_hot_encoding(self, columns):
         """
-        Performs one-hot-encoding of the provided columns
+        Performs one-hot encoding of the provided columns
         Columns is a list of column names
         """
         pass
