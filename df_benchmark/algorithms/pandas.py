@@ -15,6 +15,25 @@ class pandasBench(BaseDfBench):
             self.df = pd.read_csv(path, **kwargs)
         pass
 
+    def sort(self, columns, ascending=True):
+        """
+        Sort the dataframe by the provided columns
+        Columns is a list of column names
+        """
+        return self.df.sort_values(columns, ascending=ascending)
+
+    def get_columns(self):
+        """
+        Return the name of the columns in the dataframe
+        """
+        return list(self.df.columns.values)
+
+    def is_unique(self, column):
+        """
+        Check the uniqueness of all values contained in the provided column_name
+        """
+        return self.df[column].is_unique
+
     def delete_columns(self, columns):
         """
         Delete the specified columns
@@ -42,18 +61,10 @@ class pandasBench(BaseDfBench):
         Fill nan values in the dataframe with the provided value
         """
         return self.df.fillna(value)
-        pass
-
-    def sort(self, columns, ascending=True):
-        """
-        Sort the dataframe by the provided columns
-        Columns is a list of column names
-        """
-        return self.df.sort_values(columns, ascending=ascending)
 
     def one_hot_encoding(self, columns):
         """
-        Performs one-hot-encoding of the provided columns
+        Performs one-hot encoding of the provided columns
         Columns is a list of column names
         """
         dummies = pd.get_dummies(self.df[columns])
