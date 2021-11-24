@@ -112,3 +112,120 @@ class BaseDfBench(object):
         column to cast the new data type.
         """
         pass
+        
+    def get_stats(self):
+        """
+        Returns dataframe statistics.
+        Only for numeric columns.
+        Min value, max value, average value, standard deviation, and standard quantiles.
+        """
+        pass
+        
+    def find_mismatched_dtypes(self):
+        """
+        Returns, if exists, a list of columns with mismatched data types.
+        For example, a column with string dtypes that contains only integer values.
+        For every columns the list contain an object with three keys:
+         - Col: name of the column
+         - current_dtype: current data type
+         - suggested_dtype: suggested data type
+        """
+        pass
+        
+    def check_allowed_char(self, column, pattern):
+        """
+        Return true if all the values of the provided column
+        follow the provided pattern.
+        For example, if the pattern [a-z] is provided the string
+        'ciao' will return true, the string 'ciao123' will return false.
+        """
+        pass
+        
+    def drop_duplicates(self):
+        """
+        Drop duplicate rows.
+        """
+        pass
+        
+    def change_date_time_format(self, column, str_date_time_format):
+        """
+        Change the date/time format of the provided column
+        according to the provided formatting string.
+        column datatype must be datetime
+        An example of str_date_time_format is '%m/%d/%Y'
+        """
+        pass
+        
+    def set_header_case(self, case):
+        """
+        Put dataframe headers in the provided case
+        Supported cases: "lower", "upper", "title", "capitalize", "swapcase"
+        (see definitions in pandas documentation)
+        """
+        pass
+
+    def set_content_case(self, columns, case):
+        """
+        Put dataframe content in the provided case
+        Supported cases: "lower", "upper", "title", "capitalize", "swapcase"
+        (see definitions in pandas documentation)
+        Columns is a list of two column names; empty list for the whole dataframe
+        """
+        pass
+
+    def duplicate_columns(self, columns):
+        """
+        Duplicate the provided columns (add to the dataframe with "_duplicate" suffix)
+        Columns is a list of column names
+        """
+        pass
+
+    def pivot(self, index, columns, values, aggfunc):
+        """
+        Define the lists of columns to be used as index, columns and values respectively,
+        and the dictionary to aggregate ("sum", "mean", "count") the values for each column: {"col1": "sum"}
+        (see pivot_table in pandas documentation)
+        """
+        pass
+
+    def unpivot(self, columns, var_name, val_name):
+        """
+        Define the list of columns to be used as values for the variable column,
+        the name for variable columns and the one for value column_name
+        """
+        pass
+
+    def delete_empty_rows(self, columns):
+        """
+        Delete the rows with null values for all provided Columns
+        Columns is a list of column names
+        """
+        pass
+
+    def split(self, column, sep, splits, col_names):
+        """
+        Split the provided column into splits + 1 columns named after col_names
+        using the provided sep string as separator
+        Col_names is a list of column names
+        """
+        pass
+
+    def strip(self, columns, chars):
+        """
+        Remove the characters appearing in chars at the beginning/end of the provided columns
+        Columns is a list of column names
+        """
+        pass
+
+    def remove_diacritics(self, columns):
+        """
+        Remove diacritics from the provided columns
+        Columns is a list of column names
+        """
+        pass
+        
+    def set_index(self, column):
+        """
+        Set the provided column as index
+        """
+        pass
