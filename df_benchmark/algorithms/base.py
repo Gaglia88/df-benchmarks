@@ -88,11 +88,27 @@ class BaseDfBench(object):
         on the provided column.
         Pattern could be a regular expression.
         """
+        pass
         
     def locate_outliers(self, column, lower_quantile=0.1, upper_quantile=0.99):
         """
         Returns the rows of the dataframe that have values
         in the provided column lower or higher than the values
         of the lower/upper quantile.
+        """
+        pass
+        
+    def get_columns_types(self):
+        """
+        Returns a dictionary with column types
+        """
+        pass
+        
+    def cast_columns_types(self, dtypes):
+        """
+        Cast the data types of the provided columns 
+        to the provided new data types.
+        dtypes is a dictionary that provide for each
+        column to cast the new data type.
         """
         pass

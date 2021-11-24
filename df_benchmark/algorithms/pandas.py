@@ -97,4 +97,19 @@ class pandasBench(BaseDfBench):
         q_low = self.df[column].quantile(lower_quantile)
         q_hi  = self.df[column].quantile(upper_quantile)
         return self.df[(self.df[column] < q_low) | (self.df[column] > q_hi)]
-        pass
+        
+    def get_columns_types(self):
+        """
+        Returns a dictionary with column types
+        """
+        return self.df.dtypes.apply(lambda x: x.name).to_dict()
+        
+    def cast_columns_types(self, dtypes):
+        """
+        Cast the data types of the provided columns 
+        to the provided new data types.
+        dtypes is a dictionary that provide for each
+        column to cast the new data type.
+        """
+        return self.df.astype(dtypes)
+    
