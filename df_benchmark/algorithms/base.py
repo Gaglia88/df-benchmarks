@@ -73,3 +73,26 @@ class BaseDfBench(object):
         Columns is a list of column names
         """
         pass
+        
+    def locate_null_values(self, column):
+        """
+        Returns the rows of the dataframe which contains
+        null value in the provided column.
+        """
+        pass
+    
+    def search_by_pattern(self, column, pattern):
+        """
+        Returns the rows of the dataframe which
+        match with the provided pattern
+        on the provided column.
+        Pattern could be a regular expression.
+        """
+        
+    def locate_outliers(self, column, lower_quantile=0.1, upper_quantile=0.99):
+        """
+        Returns the rows of the dataframe that have values
+        in the provided column lower or higher than the values
+        of the lower/upper quantile.
+        """
+        pass

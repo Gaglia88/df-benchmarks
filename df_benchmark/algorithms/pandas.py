@@ -69,3 +69,32 @@ class pandasBench(BaseDfBench):
         """
         dummies = pd.get_dummies(self.df[columns])
         return pd.concat([self.df.drop(columns=columns), dummies], axis=1)
+        
+        
+        
+    def locate_null_values(self, column):
+        """
+        Returns the rows of the dataframe which contains
+        null value in the provided column.
+        """
+        return self.df[self.df[column].isna()]
+    
+    def search_by_pattern(self, column, pattern):
+        """
+        Returns the rows of the dataframe which
+        match with the provided pattern
+        on the provided column.
+        Pattern could be a regular expression.
+        """
+        return self.df[self.df[column].str.contains(re.compile(pattern))]
+        
+    def locate_outliers(self, column, lower_quantile=0.1, upper_quantile=0.99):
+        """
+        Returns the rows of the dataframe that have values
+        in the provided column lower or higher than the values
+        of the lower/upper quantile.
+        """
+        q_low = self.df[column].quantile(lower_quantile)
+        q_hi  = self.df[column].quantile(upper_quantile)
+        return self.df[(self.df[column] < q_low) | (self.df[column] > q_hi)]
+        pass
