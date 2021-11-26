@@ -10,9 +10,50 @@ class pandasBench(BaseDfBench):
         Load the provided dataframe
         """
         if format == "csv":
-            self.df = pd.read_csv(path, **kwargs)
+            self.df = self.read_csv(path, **kwargs)
         elif format == "json":
-            self.df = pd.read_csv(path, **kwargs)
+            self.df = self.read_json(path, **kwargs)
+        elif format == "xml":
+            self.df = self.read_json(path, **kwargs)
+        elif format == "excel":
+            self.df = self.read_json(path, **kwargs)
+        elif format == "parquet":
+            self.df = self.read_json(path, **kwargs)
+        pass
+        
+    def read_json(self, path, **kwargs):
+        """
+        Read a json file
+        """
+        self.df = pd.read_json(path, **kwargs)
+        pass
+    
+    def read_csv(self, path, **kwargs):
+        """
+        Read a csv file
+        """
+        self.df = pd.read_csv(path, **kwargs)
+        pass
+        
+    def read_xml(self, path, **kwargs):
+        """
+        Read a xml file
+        """
+        self.df = pd.read_xml(path, **kwargs)
+        pass
+        
+    def read_excel(self, path, **kwargs):
+        """
+        Read an excel file
+        """
+        self.df = pd.read_excel(path, **kwargs)
+        pass
+        
+    def read_parquet(self, path, **kwargs):
+        """
+        Read a parquet file
+        """
+        self.df = pd.read_parquet(path, **kwargs)
         pass
 
     def sort(self, columns, ascending=True):
@@ -282,4 +323,116 @@ class pandasBench(BaseDfBench):
         Set the provided column as index
         """
         self.df = self.df.set_index(column)
+        return self.df
+        
+        
+    def change_num_format(self, formats):
+        """
+        Round one ore more columns to a variable number of decimal places.
+        formats is a dictionary with the column names as key and the number of decimal places as value.
+        """
+        self.df = self.df.round(formats)
+        return self.df
+        
+        
+    def calc_column(self, col_name, f):
+        """
+        Calculate the new column col_name by applying
+        the function f
+        """
+        self.df[col_name] = self.df.apply(f, axis=1)
+        return self.df
+        
+    def join(self, other, left_on=None, right_on=None, how='inner', **kwargs):
+        """
+        Joins current dataframe (left) with a new one (right).
+        left_on/right_on are the keys on which perform the equijoin
+        how is the type of join
+        **kwargs: additional parameters
+        
+        The result is stored in the current dataframe.
+        """
+        self.df = self.df.merge(other, left_on=left_on, right_on=right_on, how=how, **kwargs)
+        return self.df
+        
+    def groupby(self, columns, f):
+        """
+        Aggregate the dataframe by the provided columns
+        then applied the function f on every group
+        """
+        return self.df.groupby(columns).agg(f)
+        
+    
+    def categorical_encoding(self, columns):
+        """
+        Convert the categorical values in these columns into numerical values
+        Columns is a list of column names
+        """
+        for column in columns:
+            self.df[column] = self.df[column].astype('category')
+            self.df[column] = self.df[column].cat.codes
+        return self.df
+
+    def sample_rows(self, frac, num):
+        """
+        Return a sample of the rows of the dataframe
+        Frac is a boolean:
+        - if true, num is the percentage of rows to be returned
+        - if false, num is the exact number of rows to be returned
+        """
+        if frac:
+            return self.df.sample(frac=num/100)
+        else:
+            return self.df.sample(n=num)
+
+    def append(self, other, ignore_index):
+        """
+        Append the rows of another dataframe (other) at the end of the provided dataframe
+        All columns are kept, eventually filled by nan
+        Ignore index is a boolean: if true, reset row indices
+        """
+        self.df = self.df.append(other, ignore_index=ignore_index)
+        return self.df
+
+    def replace(self, columns, to_replace, value, regex):
+        """
+        Replace all occurrencies of to_replace (numeric, string, regex, list, dict) in the provided columns using the provided value
+        Regex is a boolean: if true, to_replace is interpreted as a regex
+        Columns is a list of column names
+        """
+        self.df[columns] = self.df[columns].replace(to_replace=to_replace, value=value, regex=regex)
+        return self.df
+
+    def edit(self, columns, func):
+        """
+        Edit the values of the cells in the provided columns using the provided expression
+        Columns is a list of column names
+        """
+        self.df[columns] = self.df[columns].apply(func)
+        return self.df
+
+    def set_value(self, index, column, value):
+        """
+        Set the cell identified by index and column to the provided value
+        """
+        self.df.at[index, column] = value
+        return self.df
+
+    def min_max_scaling(self, columns):
+        """
+        Independently scale the values in each provided column in the range (0, 1)
+        Columns is a list of column names
+        """
+        for column in columns:
+            self.df[column] = self.df[column] - self.df[column].min()
+            self.df[column] = self.df[column] / self.df[column].max()
+            self.df[column] = self.df[column] * (max - min) + min
+        return self.df
+
+    def round(self, columns, n):
+        """
+        Round the values in columns using n decimal places
+        Columns is a list of column names
+        """
+        self.df[columns] = self.df[columns].round(n)
         return self.df

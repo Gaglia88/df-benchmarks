@@ -20,6 +20,36 @@ class BaseDfBench(object):
         Load the provided dataframe
         """
         pass
+        
+    def read_json(self, path, **kwargs):
+        """
+        Read a json file
+        """
+        pass
+    
+    def read_csv(self, path, **kwargs):
+        """
+        Read a csv file
+        """
+        pass
+        
+    def read_xml(self, path, **kwargs):
+        """
+        Read a xml file
+        """
+        pass
+        
+    def read_excel(self, path, **kwargs):
+        """
+        Read an excel file
+        """
+        pass
+        
+    def read_parquet(self, path, **kwargs):
+        """
+        Read a parquet file
+        """
+        pass
 
     def sort(self, columns, ascending=True):
         """
@@ -227,5 +257,98 @@ class BaseDfBench(object):
     def set_index(self, column):
         """
         Set the provided column as index
+        """
+        pass
+        
+        
+    def change_num_format(self, formats):
+        """
+        Round one ore more columns to a variable number of decimal places.
+        formats is a dictionary with the column names as key and the number of decimal places as value.
+        """
+        pass
+        
+    def calc_column(self, col_name, f):
+        """
+        Calculate the new column col_name by applying
+        the function f
+        """
+        pass
+        
+    def join(self, other, left_on=None, right_on=None, how='inner', **kwargs):
+        """
+        Joins current dataframe (left) with a new one (right).
+        left_on/right_on are the keys on which perform the equijoin
+        how is the type of join
+        **kwargs: additional parameters
+        
+        The result is stored in the current dataframe.
+        """
+        pass
+        
+    def groupby(self, columns, f):
+        """
+        Aggregate the dataframe by the provided columns
+        then applied the function f on every group
+        """
+        pass
+        
+    def categorical_encoding(self, columns):
+        """
+        See label encoding / ordinal encoding by sklearn
+        Convert the categorical values in these columns into numerical values
+        Columns is a list of column names
+        """
+        pass
+
+    def sample_rows(self, frac, num):
+        """
+        Return a sample of the rows of the dataframe
+        Frac is a boolean:
+        - if true, num is the percentage of rows to be returned
+        - if false, num is the exact number of rows to be returned
+        """
+        pass
+
+    def append(self, other, ignore_index):
+        """
+        Append the rows of another dataframe (other) at the end of the provided dataframe
+        All columns are kept, eventually filled by nan
+        Ignore index is a boolean: if true, reset row indices
+        """
+        pass
+
+    def replace(self, columns, to_replace, value, regex):
+        """
+        Replace all occurrencies of to_replace (numeric, string, regex, list, dict) in the provided columns using the provided value
+        Regex is a boolean: if true, to_replace is interpreted as a regex
+        Columns is a list of column names
+        """
+        pass
+
+    def edit(self, columns, func):
+        """
+        Edit the values of the cells in the provided columns using the provided expression
+        Columns is a list of column names
+        """
+        pass
+
+    def set_value(self, index, column, value):
+        """
+        Set the cell identified by index and column to the provided value
+        """
+        pass
+
+    def min_max_scaling(self, columns, min, max):
+        """
+        Independently scale the values in each provided column in the range (min, max)
+        Columns is a list of column names
+        """
+        pass
+
+    def round(self, columns, n):
+        """
+        Round the values in columns using n decimal places
+        Columns is a list of column names
         """
         pass
