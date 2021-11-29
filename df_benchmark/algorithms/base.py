@@ -1,6 +1,13 @@
 import psutil
 
 class BaseDfBench(object):
+    def get_df(self):
+        """
+        Returns the internal dataframe
+        """
+        return self.df
+
+
     def done(self):
         """
         Called when the execution of the algorithm is done
@@ -50,6 +57,12 @@ class BaseDfBench(object):
         Read a parquet file
         """
         pass
+    
+    def read_sql(self, query, conn, **kwargs):
+        """
+        Given a connection and a query
+        creates a dataframe from the query output
+        """
 
     def sort(self, columns, ascending=True):
         """
@@ -350,5 +363,19 @@ class BaseDfBench(object):
         """
         Round the values in columns using n decimal places
         Columns is a list of column names
+        """
+        pass
+        
+    def get_duplicate_columns(self):
+        """
+        Return a list of duplicate columns, if exists.
+        Duplicate columns are those which have same values for each row.
+        """
+        pass
+        
+    
+    def to_csv(self, path, **kwargs):
+        """
+        Export the dataframe in a csv file.
         """
         pass

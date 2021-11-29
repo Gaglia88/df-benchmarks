@@ -5,7 +5,7 @@ class pandasBench(BaseDfBench):
     def __init__(self):
         pass
 
-    def load_dataset(self, path, format, **kwargs):
+    def load_dataset(self, path, format, conn=None, **kwargs):
         """
         Load the provided dataframe
         """
@@ -19,6 +19,17 @@ class pandasBench(BaseDfBench):
             self.df = self.read_json(path, **kwargs)
         elif format == "parquet":
             self.df = self.read_json(path, **kwargs)
+        elif format == "sql":
+            self.df = self.read_sql(path, conn, **kwargs)
+            
+        pass
+        
+    def read_sql(self, query, conn, **kwargs):
+        """
+        Given a connection and a query
+        creates a dataframe from the query output
+        """
+        self.df = pd.read_sql(query, conn)
         pass
         
     def read_json(self, path, **kwargs):
@@ -436,3 +447,18 @@ class pandasBench(BaseDfBench):
         """
         self.df[columns] = self.df[columns].round(n)
         return self.df
+        
+    def get_duplicate_columns(self):
+        """
+        Return a list of duplicate columns, if exists.
+        Duplicate columns are those which have same values for each row.
+        """
+        cols = self.df.columns.values
+        return [(cols[i], cols[j]) for i in range(0, len(cols)) for j in range(i+1, len(cols)) if self.df[cols[i]].equals(self.df[cols[j]])]
+    
+    def to_csv(self, path, **kwargs):
+        """
+        Export the dataframe in a csv file.
+        """
+        self.df.to_csv(path, **kwargs)
+        pass
